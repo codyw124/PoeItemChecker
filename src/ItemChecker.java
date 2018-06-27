@@ -1,5 +1,9 @@
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.awt.HeadlessException;
+import java.awt.Toolkit;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
+
+import java.io.IOException;
 
 public class ItemChecker
 {
@@ -9,7 +13,7 @@ public class ItemChecker
 		while (true)
 		{
 			// read in an item
-			ArrayList<String> item = getItemInfo();
+			String[] item = getItem();
 
 			if (isGoodItem(item, 3))
 			{
@@ -22,42 +26,46 @@ public class ItemChecker
 		}
 	}
 
-	public static ArrayList<String> getItemInfo()
+	public static String[] getItem()
 	{
-		// make a scanner
-		Scanner scanner = new Scanner(System.in);
-
-		// make a place to hold the items info
-		ArrayList<String> itemInfo = new ArrayList<String>();
-
-		// make a string that will store each line as it gets
-		// read in
-		// also make it not empty to differentiate from the last
-		// line being read in
-		String currentLine = "NewItem";
-
-		// while we havent reached the last line read in
-		while (!currentLine.equals(""))
+		//make a stored and current to insure we dont run ont 
+		//the same string twice
+		String stored = "";
+		String current = "";
+		
+		//try to grab a string from the copy buffer
+		try
 		{
-			// get the next line
-			currentLine = scanner.nextLine().toUpperCase();
-
-			// append it to the array list
-			itemInfo.add(currentLine);
+			current = (String) Toolkit.getDefaultToolkit()
+			        .getSystemClipboard().getData(DataFlavor.stringFlavor);
+			
+			//if we can get one then set it to the stored
+			if(!current.equals(stored))
+			{
+				stored = current;
+			}
+			
 		}
+		catch (HeadlessException | UnsupportedFlavorException | IOException e)
+		{
+			System.out.println("failed to get copy buffer");
+		}
+		
+		// make a place to hold the items info
+		String[] itemInfo = stored.split("\n");
 
 		return itemInfo;
 	}
 
-	public static boolean areBoots(ArrayList<String> item)
+	public static boolean areBoots(String[] item)
 	{
 		boolean areBoots = false;
 
 		// check all mods if any tell us the item is a pair of boots
 		// stop checking, if you run out of mods they arent boots
-		for (int i = 0; i < item.size() && !areBoots; i++)
+		for (int i = 0; i < item.length && !areBoots; i++)
 		{
-			if (item.get(i).contains("BOOTS"))
+			if (item[i].contains("BOOTS"))
 			{
 				areBoots = true;
 			}
@@ -65,7 +73,7 @@ public class ItemChecker
 		return areBoots;
 	}
 
-	public static boolean isGoodItem(ArrayList<String> item, int goodModRequirement)
+	public static boolean isGoodItem(String[] item, int goodModRequirement)
 	{
 		int goodMods = 0;
 
