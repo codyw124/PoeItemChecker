@@ -14,11 +14,21 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.libpoe.model.StashTab;
+import org.libpoe.model.item.Item;
+import org.libpoe.net.AuthInfo;
+import org.libpoe.util.League;
+import org.libpoe.util.StashLoader;
+
 public class ItemChecker
 {
 	public static void main(String[] args)
 	{
+		StashTab myStashTab = StashLoader.fromAccount(new AuthInfo("cody_w125@ymail.com", "7272428"), League.STANDARD, 0);
 		
+		Item[] myItems = myStashTab.getItems();
+		
+		System.out.println(myItems[0].getName());
 	}
 	
 	public static ArrayList<String> appendNextPageToList(ArrayList<String> pages, String nextUrlString)

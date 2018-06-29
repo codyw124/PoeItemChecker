@@ -7,5 +7,6 @@
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="C:/Users/Cody/Desktop/PoeItemChecker/gson-2.8.5.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Cody/Desktop/libpoe/lib-poe.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
