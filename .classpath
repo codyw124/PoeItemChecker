@@ -9,5 +9,6 @@
 	<classpathentry kind="lib" path="C:/Users/Cody/Desktop/PoeItemChecker/gson-2.8.5.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Cody/Desktop/PoeItemChecker/lib-poe.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="C:/Users/Cody/Desktop/PoeItemChecker/jsoup-1.8.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

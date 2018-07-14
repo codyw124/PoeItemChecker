@@ -16,165 +16,150 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class HttpUrlConnectionExample {
+public class HttpUrlConnectionExample
+{
 
-  private List<String> cookies;
-  private HttpsURLConnection conn;
+	private List<String> cookies;
+	private HttpsURLConnection conn;
 
-  private final String USER_AGENT = "Mozilla/5.0";
+	private final String USER_AGENT = "Mozilla/5.0";
 
-  public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception
+	{
+		String poeUrl = "https://www.pathofexile.com";
 
-	String url = "https://accounts.google.com/ServiceLoginAuth";
-	String gmail = "https://mail.google.com/mail/";
+		HttpUrlConnectionExample http = new HttpUrlConnectionExample();
 
-	HttpUrlConnectionExample http = new HttpUrlConnectionExample();
+		// make sure cookies is turn on
+		CookieHandler.setDefault(new CookieManager());
 
-	// make sure cookies is turn on
-	CookieHandler.setDefault(new CookieManager());
-
-	// 1. Send a "GET" request, so that you can extract the form's data.
-	String page = http.GetPageContent(url);
-	String postParams = http.getFormParams(page, "username@gmail.com", "password");
-
-	// 2. Construct above post's content and then send a POST request for
-	// authentication
-	http.sendPost(url, postParams);
-
-	// 3. success then go to gmail.
-	String result = http.GetPageContent(gmail);
-	System.out.println(result);
-  }
-
-  private void sendPost(String url, String postParams) throws Exception {
-
-	URL obj = new URL(url);
-	conn = (HttpsURLConnection) obj.openConnection();
-
-	// Acts like a browser
-	conn.setUseCaches(false);
-	conn.setRequestMethod("POST");
-	conn.setRequestProperty("Host", "accounts.google.com");
-	conn.setRequestProperty("User-Agent", USER_AGENT);
-	conn.setRequestProperty("Accept",
-		"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-	conn.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-	for (String cookie : this.cookies) {
-		conn.addRequestProperty("Cookie", cookie.split(";", 1)[0]);
+		ArrayList<String> result = http.GetPageContent(poeUrl);
+		
+		for(String x : result)
+		{
+			System.out.println(x);
+		}
 	}
-	conn.setRequestProperty("Connection", "keep-alive");
-	conn.setRequestProperty("Referer", "https://accounts.google.com/ServiceLoginAuth");
-	conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-	conn.setRequestProperty("Content-Length", Integer.toString(postParams.length()));
 
-	conn.setDoOutput(true);
-	conn.setDoInput(true);
+	private void sendPost(String url, String postParams) throws Exception
+	{
 
-	// Send post request
-	DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
-	wr.writeBytes(postParams);
-	wr.flush();
-	wr.close();
+		URL obj = new URL(url);
+		conn = (HttpsURLConnection) obj.openConnection();
 
-	int responseCode = conn.getResponseCode();
-	System.out.println("\nSending 'POST' request to URL : " + url);
-	System.out.println("Post parameters : " + postParams);
-	System.out.println("Response Code : " + responseCode);
-
-	BufferedReader in = 
-             new BufferedReader(new InputStreamReader(conn.getInputStream()));
-	String inputLine;
-	StringBuffer response = new StringBuffer();
-
-	while ((inputLine = in.readLine()) != null) {
-		response.append(inputLine);
-	}
-	in.close();
-	// System.out.println(response.toString());
-
-  }
-
-  private String GetPageContent(String url) throws Exception {
-
-	URL obj = new URL(url);
-	conn = (HttpsURLConnection) obj.openConnection();
-
-	// default is GET
-	conn.setRequestMethod("GET");
-
-	conn.setUseCaches(false);
-
-	// act like a browser
-	conn.setRequestProperty("User-Agent", USER_AGENT);
-	conn.setRequestProperty("Accept",
-		"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-	conn.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-	if (cookies != null) {
-		for (String cookie : this.cookies) {
+		// Acts like a browser
+		conn.setUseCaches(false);
+		conn.setRequestMethod("POST");
+		conn.setRequestProperty("Host", "accounts.google.com");
+		conn.setRequestProperty("User-Agent", USER_AGENT);
+		conn.setRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+		conn.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+		for (String cookie : this.cookies)
+		{
 			conn.addRequestProperty("Cookie", cookie.split(";", 1)[0]);
 		}
-	}
-	int responseCode = conn.getResponseCode();
-	System.out.println("\nSending 'GET' request to URL : " + url);
-	System.out.println("Response Code : " + responseCode);
+		conn.setRequestProperty("Connection", "keep-alive");
+		conn.setRequestProperty("Referer", "https://accounts.google.com/ServiceLoginAuth");
+		conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+		conn.setRequestProperty("Content-Length", Integer.toString(postParams.length()));
 
-	BufferedReader in = 
-            new BufferedReader(new InputStreamReader(conn.getInputStream()));
-	String inputLine;
-	StringBuffer response = new StringBuffer();
+		conn.setDoOutput(true);
+		conn.setDoInput(true);
 
-	while ((inputLine = in.readLine()) != null) {
-		response.append(inputLine);
-	}
-	in.close();
+		// Send post request
+		DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
+		wr.writeBytes(postParams);
+		wr.flush();
+		wr.close();
 
-	// Get the response cookies
-	setCookies(conn.getHeaderFields().get("Set-Cookie"));
+		int responseCode = conn.getResponseCode();
+		System.out.println("\nSending 'POST' request to URL : " + url);
+		System.out.println("Post parameters : " + postParams);
+		System.out.println("Response Code : " + responseCode);
 
-	return response.toString();
+		BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+		String inputLine;
+		StringBuffer response = new StringBuffer();
 
-  }
-
-  public String getFormParams(String html, String username, String password)
-		throws UnsupportedEncodingException {
-
-	System.out.println("Extracting form's data...");
-
-	Document doc = Jsoup.parse(html);
-
-	// Google form id
-	Element loginform = doc.getElementById("gaia_loginform");
-	Elements inputElements = loginform.getElementsByTag("input");
-	List<String> paramList = new ArrayList<String>();
-	for (Element inputElement : inputElements) {
-		String key = inputElement.attr("name");
-		String value = inputElement.attr("value");
-
-		if (key.equals("Email"))
-			value = username;
-		else if (key.equals("Passwd"))
-			value = password;
-		paramList.add(key + "=" + URLEncoder.encode(value, "UTF-8"));
-	}
-
-	// build parameters list
-	StringBuilder result = new StringBuilder();
-	for (String param : paramList) {
-		if (result.length() == 0) {
-			result.append(param);
-		} else {
-			result.append("&" + param);
+		while ((inputLine = in.readLine()) != null)
+		{
+			response.append(inputLine);
 		}
+		in.close();
+		System.out.println(response.toString());
+
 	}
-	return result.toString();
-  }
 
-  public List<String> getCookies() {
-	return cookies;
-  }
+	private ArrayList<String> GetPageContent(String url) throws Exception
+	{
 
-  public void setCookies(List<String> cookies) {
-	this.cookies = cookies;
-  }
+		URL obj = new URL(url);
+		conn = (HttpsURLConnection) obj.openConnection();
+
+		// default is GET
+		conn.setRequestMethod("GET");
+		
+		BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+		String currentLine;
+		ArrayList<String> response = new ArrayList<String>();
+
+		while ((currentLine = br.readLine()) != null)
+		{
+			response.add(currentLine);
+		}
+		br.close();
+
+		return response;
+
+	}
+
+	public String getFormParams(String html, String username, String password) throws UnsupportedEncodingException
+	{
+
+		System.out.println("Extracting form's data...");
+
+		Document doc = Jsoup.parse(html);
+
+		// Google form id
+		Element loginform = doc.getElementById("gaia_loginform");
+		Elements inputElements = loginform.getElementsByTag("input");
+		List<String> paramList = new ArrayList<String>();
+		for (Element inputElement : inputElements)
+		{
+			String key = inputElement.attr("name");
+			String value = inputElement.attr("value");
+
+			if (key.equals("Email"))
+				value = username;
+			else if (key.equals("Passwd"))
+				value = password;
+			paramList.add(key + "=" + URLEncoder.encode(value, "UTF-8"));
+		}
+
+		// build parameters list
+		StringBuilder result = new StringBuilder();
+		for (String param : paramList)
+		{
+			if (result.length() == 0)
+			{
+				result.append(param);
+			}
+			else
+			{
+				result.append("&" + param);
+			}
+		}
+		return result.toString();
+	}
+
+	public List<String> getCookies()
+	{
+		return cookies;
+	}
+
+	public void setCookies(List<String> cookies)
+	{
+		this.cookies = cookies;
+	}
 
 }
