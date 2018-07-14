@@ -51,12 +51,12 @@ public class StashRetriever
 		}
 	}
 
-	public Stash getStash(int stashIndex)
-	{
-		Stash returnStash = new Stash();
-
-		loginToWebsite();
-
-		return returnStash;
-	}
+//	public Stash getStash(int stashIndex)
+//	{
+//		Stash returnStash = new Stash();
+//
+//		loginToWebsite();
+//
+//		return returnStash;
+//	}
 }
