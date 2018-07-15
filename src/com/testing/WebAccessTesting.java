@@ -2,29 +2,43 @@ package com.testing;
 
 import static org.junit.Assert.*;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.newideas.NewIdeas;
 
 public class WebAccessTesting
 {
+	private static NewIdeas tester_;
 
-	@Test
-	public void testLogin()
+	@BeforeClass()
+	public static void setUp()
 	{
-		NewIdeas test = new NewIdeas();
-		
-		assert(test.login("cody_w125@ymail.com", "UbisoftBound18"));
-	}
-	
-	@Test
-	public void testClickCharacterName()
-	{
-		NewIdeas test = new NewIdeas();
-		
-		assert(test.login("cody_w125@ymail.com", "UbisoftBound18"));
-		
-		assert(test.openStash());
+		tester_ = new NewIdeas();
 	}
 
+	@Test
+	public void test1Login()
+	{
+		assert (tester_.login("cody_w125@ymail.com", "UbisoftBound18"));
+	}
+
+	@Test
+	public void test2ClickCharacterName()
+	{
+		assert (tester_.openCharacterInformation());
+	}
+
+	@Test
+	public void test3ClickStash()
+	{
+		assert (tester_.openStash());
+	}
+
+	@AfterClass()
+	public static void tearDown()
+	{
+		// test.closeBrowser();
+	}
 }
