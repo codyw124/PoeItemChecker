@@ -28,9 +28,10 @@ public class NewIdeas
 		{
 			tester_.login("cody_w125@ymail.com", "UbisoftBound18");
 			tester_.openAccountInformation();
-			tester_.selectCharacter("NEEDSMOREFROGS".toUpperCase());
+			// tester_.selectCharacter("NEEDSMOREFROGS".toUpperCase());
 			// tester_.selectCharacter("thingofthedeep".toUpperCase());
-			tester_.openStash();
+			// tester_.openStash();
+			// tester_.closeBrowser();
 		}
 		catch (FailedToLoginException e)
 		{
@@ -40,14 +41,14 @@ public class NewIdeas
 		{
 			System.err.println("Failed to open account.");
 		}
-		catch (InvalidCharacterName e)
-		{
-			System.err.println("Invalid Character name entered.");
-		}
-		catch (FailedToOpenStash e)
-		{
-			System.err.println("Failed to open the stash.");
-		}
+		// catch (InvalidCharacterName e)
+		// {
+		// System.err.println("Invalid Character name entered.");
+		// }
+		// catch (FailedToOpenStash e)
+		// {
+		// System.err.println("Failed to open the stash.");
+		// }
 	}
 
 	private WebDriver driver_;
@@ -75,12 +76,19 @@ public class NewIdeas
 		// go to login page
 		driver_.get(loginUrl);
 
-		// grab the login email and password elements
-		WebElement login_email = driver_.findElement(By.name("login_email"));
-		WebElement login_password = driver_.findElement(By.name("login_password"));
+		// grab the login email and password elements once it loads
+		WebElement login_email = wait_.until(ExpectedConditions.presenceOfElementLocated(By.name("login_email")));
+		WebElement login_password = wait_.until(ExpectedConditions.presenceOfElementLocated(By.name("login_password")));
 
 		// grab the submit button
-		WebElement login = driver_.findElement(By.name("login"));
+		WebElement login = wait_.until(ExpectedConditions.presenceOfElementLocated(By.name("login")));
+
+		// if we couldnt grab those 3 throw an exception because we will be unable to
+		// login
+		if (login_email == null || login_password == null || login == null)
+		{
+			throw new FailedToLoginException();
+		}
 
 		// type info
 		login_email.sendKeys(email);
@@ -89,9 +97,11 @@ public class NewIdeas
 		// submit to log in
 		login.click();
 
+		// this is the string that the url should contain after we login
 		final String expectedUrlAfterLogin = "https://www.pathofexile.com/my-account";
 
 		// check and make sure that we logged in if not throw an exception
+		// because logging in failed
 		if (!expectedUrlAfterLogin.equals(driver_.getCurrentUrl()))
 		{
 			throw new FailedToLoginException();
@@ -101,22 +111,25 @@ public class NewIdeas
 	public void openAccountInformation() throws FailedToOpenAccountInfo
 	{
 		// find the chacacter name in the top left
-		WebElement characterName = driver_.findElement(By.className("infoLine1"));
+		WebElement characterName = wait_.until(ExpectedConditions.presenceOfElementLocated(By.className("infoLine1")));
+		
+		//if we cant grab that throw an exception because this failed
+		if(characterName == null)
+		{
+			throw new FailedToOpenAccountInfo();
+		}
 
 		// click on it
 		characterName.click();
+		
+		//grab the overlay when it appears
+		WebElement overlay = wait_.until(ExpectedConditions.presenceOfElementLocated(By.id("cboxOverlay")));
 
-		// get the overlay that should have appeared
-		WebElement overlay = driver_.findElement(By.id("cboxOverlay"));
-
-		// wait until overlay is visible
-		wait_.until(ExpectedConditions.visibilityOf(overlay));
-
-		// get the overlays style
+		//grab the overlays style attribute
 		String styleOfOverlay = overlay.getAttribute("style");
 
-		// ensure its opacity was set to 0 so it is visible
-		if (styleOfOverlay.contains("opacity: 0;"))
+		//if the opacity is not 0.9; then we failed to pull it up
+		if (!styleOfOverlay.contains("opacity: 0.9;"))
 		{
 			throw new FailedToOpenAccountInfo();
 		}
@@ -173,14 +186,14 @@ public class NewIdeas
 		// click it
 		showStashButton.click();
 
-		if()
-		{
-			
-		}
-		else
-		{
-			throw new FailedToOpenStash();
-		}
+		// if()
+		// {
+		//
+		// }
+		// else
+		// {
+		// throw new FailedToOpenStash();
+		// }
 	}
 
 	public void grabItems()
