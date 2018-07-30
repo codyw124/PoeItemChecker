@@ -18,11 +18,11 @@ import com.newideas.exceptions.FailedToOpenAccountInfo;
 import com.newideas.exceptions.FailedToOpenStash;
 import com.newideas.exceptions.InvalidCharacterName;
 
-public class NewIdeas
+public class StashLoader
 {
 	public static void main(String[] args)
 	{
-		NewIdeas tester_ = new NewIdeas();
+		StashLoader tester_ = new StashLoader();
 
 		try
 		{
@@ -55,7 +55,7 @@ public class NewIdeas
 
 	private WebDriverWait wait_;
 
-	public NewIdeas()
+	public StashLoader()
 	{
 		// make it headless
 		FirefoxOptions options = new FirefoxOptions();
