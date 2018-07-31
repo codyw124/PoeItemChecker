@@ -20,12 +20,16 @@ public class StashReader
 		
 		Document doc = Jsoup.parse(html);
 		
-		Element itemInfoContainer = doc.getElementById("poe-popup-container");
-		Elements items = itemInfoContainer.children();
+		Element poePopupContainer = doc.getElementById("poe-popup-container");
+		Elements items = poePopupContainer.getAllElements();
 		
-		for(Element x : items)
+		Elements t = doc.getElementsByClass("itemHeader");
+		
+		System.out.println(t.toArray().length);
+		
+		for(Element x : t)
 		{
-			System.out.println(x.child(0).child(0).child(1).child(0).text());
+			System.out.println(x.getElementsByClass("itemName").text());
 		}
 	}
 

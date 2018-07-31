@@ -13,10 +13,10 @@ import org.openqa.selenium.support.events.WebDriverEventListener;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.newideas.exceptions.FailedToLoginException;
-import com.newideas.exceptions.FailedToOpenAccountInfo;
-import com.newideas.exceptions.FailedToOpenStash;
-import com.newideas.exceptions.InvalidCharacterName;
+import com.stashplusplus.exceptions.FailedToLoginException;
+import com.stashplusplus.exceptions.FailedToOpenAccountInfo;
+import com.stashplusplus.exceptions.FailedToOpenStash;
+import com.stashplusplus.exceptions.InvalidCharacterName;
 
 public class StashLoader
 {
