@@ -6,8 +6,8 @@ public class FailedToOpenPopUp extends Exception
 	{
 		super();
 	}
-	public String getMessage()
+	public FailedToOpenPopUp(String message)
 	{
-		return "Failed To Login";
+		super(message);
 	}
 }

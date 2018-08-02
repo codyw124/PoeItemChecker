@@ -15,7 +15,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.stashplusplus.exceptions.FailedToLogin;
 import com.stashplusplus.exceptions.FailedToOpenPopUp;
-import com.stashplusplus.exceptions.FailedToOpenStash;
+import com.stashplusplus.exceptions.FailedToOpenStashesTab;
 import com.stashplusplus.exceptions.InvalidCharacterName;
 
 public class StashLoader
@@ -169,7 +169,7 @@ public class StashLoader
 
 	}
 
-	public void openStash() throws FailedToOpenStash
+	public void openStash() throws FailedToOpenStashesTab
 	{
 		// grab the inventory manager
 		WebElement inventoryManager = driver_.findElement(By.className("inventoryManager"));

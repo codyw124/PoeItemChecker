@@ -6,8 +6,8 @@
 //	{
 //		super();
 //	}
-//	public String getMessage()
+//	public InvalidCharacterName(String message)
 //	{
-//		return "Failed To Login";
+//		super(message);
 //	}
 //}

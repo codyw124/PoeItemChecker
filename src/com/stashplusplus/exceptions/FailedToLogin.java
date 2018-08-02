@@ -6,8 +6,9 @@ public class FailedToLogin extends Exception
 	{
 		super();
 	}
-	public String getMessage()
+	
+	public FailedToLogin(String message)
 	{
-		return "Failed To Login";
+		super(message);
 	}
 }
