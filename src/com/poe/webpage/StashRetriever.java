@@ -7,16 +7,18 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import com.stashplusplus.LoginCredentials;
+
 public class StashRetriever
 {
-	private LoginInfo loginInfo_;
+	private LoginCredentials loginInfo_;
 
 	public StashRetriever(String email, String password)
 	{
-		loginInfo_ = new LoginInfo(email, password);
+		loginInfo_ = new LoginCredentials(email, password);
 	}
 
-	public StashRetriever(LoginInfo loginInfo)
+	public StashRetriever(LoginCredentials loginInfo)
 	{
 		loginInfo_ = loginInfo;
 	}

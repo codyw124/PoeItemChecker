@@ -1,11 +1,11 @@
-package com.poe.webpage;
+package com.stashplusplus;
 
-public class LoginInfo
+public class LoginCredentials
 {
 	private String email_;
 	private String password_;
 
-	public LoginInfo(String email, String password)
+	public LoginCredentials(String email, String password)
 	{
 		this.email_ = email;
 		this.password_ = password;
