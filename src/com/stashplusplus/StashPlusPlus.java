@@ -8,17 +8,24 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.stashplusplus.exceptions.FailedToLoginException;
+import com.stashplusplus.exceptions.FailedToLogin;
+import com.stashplusplus.exceptions.FailedToOpenPopUp;
 
-public class Main
+public class StashPlusPlus
 {
+	public StashPlusPlus()
+	{
+		
+	}
 
 	public static void main(String[] args)
 	{
 		try
 		{
-			goToPoeWebsite();
-			// openPopup();
+			String email = "Cody_w125@ymail.com";
+			String password = "UbisoftBound18";
+			loginToPoeWebsite(email, password);
+			openPopup();
 			// Elements wornItems = getItems();
 			// navigateToStashSection();
 			// Elements stashAndWornItems = getItems();
@@ -33,66 +40,92 @@ public class Main
 			// }
 			// }
 		}
-		catch (FailedToLoginException e)
+		catch (FailedToLogin | FailedToOpenPopUp e)
 		{
 			System.err.println(e.getMessage());
 		}
 
 	}
 
-	public static void goToPoeWebsite() throws FailedToLoginException
+	public static void loginToPoeWebsite(String loginEmail, String loginPassword) throws FailedToLogin
 	{
 		// this is the url we will be navigating to
 		final String loginUrl = "http://www.pathofexile.com/login/";
-		final String loginEmail = "cody_w125@ymail.com";
-		final String loginPassword = "UbisoftBound18";
-
+	
 		// make settings that would make the browser headless
 		FirefoxOptions options = new FirefoxOptions();
+		// TODO
 		// options.setHeadless(true);
-
+	
 		// make a browser
 		WebDriver browser = new FirefoxDriver(options);
-
+	
 		// set up wait
 		WebDriverWait browserWaiter = new WebDriverWait(browser, 10);
-
+	
 		// go to login page
 		browser.get(loginUrl);
-
+	
 		// grab the login email and password elements once it loads
 		WebElement login_email = browserWaiter
 				.until(ExpectedConditions.presenceOfElementLocated(By.name("login_email")));
 		WebElement login_password = browserWaiter
 				.until(ExpectedConditions.presenceOfElementLocated(By.name("login_password")));
-
+	
 		// grab the submit button
 		WebElement login = browserWaiter.until(ExpectedConditions.presenceOfElementLocated(By.name("login")));
-
+	
 		// if we couldnt grab those 3 throw an exception because we will be unable to
 		// login
 		if (login_email == null || login_password == null || login == null)
 		{
-			throw new FailedToLoginException();
+			throw new FailedToLogin();
 		}
-
+	
 		// type info
 		login_email.sendKeys(loginEmail);
 		login_password.sendKeys(loginPassword);
-
+	
 		// submit to log in
 		login.click();
-
+	
 		// this is the string that the url should contain after we login
 		final String expectedUrlAfterLogin = "https://www.pathofexile.com/my-account";
-
+	
 		// check and make sure that we logged in if not throw an exception
 		// because logging in failed
 		if (!expectedUrlAfterLogin.equals(browser.getCurrentUrl()))
 		{
-			throw new FailedToLoginException();
+			throw new FailedToLogin();
+		}
+	
+	}
+
+	private static void openPopup() throws FailedToOpenPopUp
+	{
+		// find the chacacter name in the top left
+		WebElement characterName = browserWaiter.until(ExpectedConditions.presenceOfElementLocated(By.className("infoLine1")));
+
+		// if we cant grab that throw an exception because this failed
+		if (characterName == null)
+		{
+			throw new FailedToOpenPopUp();
 		}
 
+		// click on it
+		characterName.click();
+
+		// grab the overlay when it appears
+		WebElement overlay = browserWaiter.until(ExpectedConditions.presenceOfElementLocated(By.id("cboxOverlay")));
+
+		// grab the overlays style attribute
+		String styleOfOverlay = overlay.getAttribute("style");
+
+		// if the opacity is not 0.9; then we failed to pull it up
+		if (!styleOfOverlay.contains("opacity: 0.9;"))
+		{
+			throw new FailedToOpenPopUp();
+		}
 	}
 
 }

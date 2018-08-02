@@ -13,8 +13,8 @@ import org.openqa.selenium.support.events.WebDriverEventListener;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.stashplusplus.exceptions.FailedToLoginException;
-import com.stashplusplus.exceptions.FailedToOpenAccountInfo;
+import com.stashplusplus.exceptions.FailedToLogin;
+import com.stashplusplus.exceptions.FailedToOpenPopUp;
 import com.stashplusplus.exceptions.FailedToOpenStash;
 import com.stashplusplus.exceptions.InvalidCharacterName;
 
@@ -33,11 +33,11 @@ public class StashLoader
 			// tester_.openStash();
 			// tester_.closeBrowser();
 		}
-		catch (FailedToLoginException e)
+		catch (FailedToLogin e)
 		{
 			System.err.println("Failed to login with given account information.");
 		}
-		catch (FailedToOpenAccountInfo e)
+		catch (FailedToOpenPopUp e)
 		{
 			System.err.println("Failed to open account.");
 		}
@@ -68,7 +68,7 @@ public class StashLoader
 		wait_ = new WebDriverWait(driver_, 10);
 	}
 
-	public void login(String email, String password) throws FailedToLoginException
+	public void login(String email, String password) throws FailedToLogin
 	{
 		// this is the url we will be navigating to
 		final String loginUrl = "http://www.pathofexile.com/login/";
@@ -87,7 +87,7 @@ public class StashLoader
 		// login
 		if (login_email == null || login_password == null || login == null)
 		{
-			throw new FailedToLoginException();
+			throw new FailedToLogin();
 		}
 
 		// type info
@@ -104,11 +104,11 @@ public class StashLoader
 		// because logging in failed
 		if (!expectedUrlAfterLogin.equals(driver_.getCurrentUrl()))
 		{
-			throw new FailedToLoginException();
+			throw new FailedToLogin();
 		}
 	}
 
-	public void openAccountInformation() throws FailedToOpenAccountInfo
+	public void openAccountInformation() throws FailedToOpenPopUp
 	{
 		// find the chacacter name in the top left
 		WebElement characterName = wait_.until(ExpectedConditions.presenceOfElementLocated(By.className("infoLine1")));
@@ -116,7 +116,7 @@ public class StashLoader
 		//if we cant grab that throw an exception because this failed
 		if(characterName == null)
 		{
-			throw new FailedToOpenAccountInfo();
+			throw new FailedToOpenPopUp();
 		}
 
 		// click on it
@@ -131,7 +131,7 @@ public class StashLoader
 		//if the opacity is not 0.9; then we failed to pull it up
 		if (!styleOfOverlay.contains("opacity: 0.9;"))
 		{
-			throw new FailedToOpenAccountInfo();
+			throw new FailedToOpenPopUp();
 		}
 	}
 

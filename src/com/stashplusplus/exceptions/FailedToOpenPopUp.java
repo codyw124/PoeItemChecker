@@ -1,8 +1,8 @@
 package com.stashplusplus.exceptions;
 
-public class FailedToLoginException extends Exception
+public class FailedToOpenPopUp extends Exception
 {
-	public FailedToLoginException()
+	public FailedToOpenPopUp()
 	{
 		super();
 	}
