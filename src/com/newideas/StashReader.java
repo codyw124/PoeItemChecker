@@ -19,34 +19,26 @@ public class StashReader
 	{
 		StashReader sr = new StashReader();
 		String html = sr.loadTestString();
-		
+		ArrayList<Item> items = getItems(html);
+	}
+
+	public static ArrayList<Item> getItems(String html)
+	{
 		Document doc = Jsoup.parse(html);
-		
+
 		Element test = doc.getElementById("poe-popup-container");
-		
+
 		ArrayList<Item> items = new ArrayList<>();
-		
-		for(Element x : test.getAllElements())
+
+		for (Element x : test.getAllElements())
 		{
-			if(x.classNames().contains("itemPopupContainer"))
+			if (x.classNames().contains("itemPopupContainer"))
 			{
 				items.add(new Item(x.getElementsByClass("itemName").get(0).text()));
 			}
 		}
-		
-//		return items;
-		
-//		Element poePopupContainer = doc.getElementById("poe-popup-container");
-//		Elements items = poePopupContainer.getAllElements();
-//		
-//		Elements t = doc.getElementsByClass("itemHeader");
-//		
-//		System.out.println(t.toArray().length);
-//		
-//		for(Element x : t)
-//		{
-//			System.out.println(x.getElementsByClass("itemName").text());
-//		}
+
+		return items;
 	}
 
 	public String loadTestString()
