@@ -25,7 +25,7 @@ import com.stashplusplus.exceptions.FailedToLogin;
 import com.stashplusplus.exceptions.FailedToOpenPopUp;
 import com.stashplusplus.exceptions.FailedToOpenStashesTab;
 
-class StashPlusPlus
+public class StashPlusPlus
 {
 	public static void main(String[] args)
 	{

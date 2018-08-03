@@ -5,11 +5,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+
+import com.stashplusplus.Item;
 
 public class StashReader
 {
@@ -20,17 +22,31 @@ public class StashReader
 		
 		Document doc = Jsoup.parse(html);
 		
-		Element poePopupContainer = doc.getElementById("poe-popup-container");
-		Elements items = poePopupContainer.getAllElements();
+		Element test = doc.getElementById("poe-popup-container");
 		
-		Elements t = doc.getElementsByClass("itemHeader");
+		ArrayList<Item> items = new ArrayList<>();
 		
-		System.out.println(t.toArray().length);
-		
-		for(Element x : t)
+		for(Element x : test.getAllElements())
 		{
-			System.out.println(x.getElementsByClass("itemName").text());
+			if(x.classNames().contains("itemPopupContainer"))
+			{
+				items.add(new Item(x.getElementsByClass("itemName").get(0).text()));
+			}
 		}
+		
+//		return items;
+		
+//		Element poePopupContainer = doc.getElementById("poe-popup-container");
+//		Elements items = poePopupContainer.getAllElements();
+//		
+//		Elements t = doc.getElementsByClass("itemHeader");
+//		
+//		System.out.println(t.toArray().length);
+//		
+//		for(Element x : t)
+//		{
+//			System.out.println(x.getElementsByClass("itemName").text());
+//		}
 	}
 
 	public String loadTestString()
