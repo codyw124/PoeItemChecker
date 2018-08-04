@@ -1,11 +1,5 @@
 package com.poe.itemchecker;
 
-import java.awt.HeadlessException;
-import java.awt.Toolkit;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.io.IOException;
-
 public class ItemChecker
 {	
 	public static boolean areBoots(String[] item)

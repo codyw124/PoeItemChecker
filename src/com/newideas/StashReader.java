@@ -59,6 +59,8 @@ public class StashReader
 			{
 				returnValue.append(st);
 			}
+			
+			br.close();
 
 		}
 		catch (FileNotFoundException e)

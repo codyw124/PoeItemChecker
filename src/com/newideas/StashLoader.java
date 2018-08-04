@@ -3,13 +3,10 @@ package com.newideas;
 import java.util.List;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.support.events.EventFiringWebDriver;
-import org.openqa.selenium.support.events.WebDriverEventListener;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -134,7 +131,7 @@ public class StashLoader
 		}
 	}
 
-	public void selectCharacter(String characterName) throws InvalidCharacterName
+	public void selectCharacter(String characterName) //throws InvalidCharacterName
 	{
 		// get all the characters in the list of characters
 		List<WebElement> characters = driver_.findElements(By.className("characterName"));
@@ -163,7 +160,7 @@ public class StashLoader
 		// }
 		// else
 		// {
-		throw new InvalidCharacterName();
+		//throw new InvalidCharacterName();
 		// }
 
 	}

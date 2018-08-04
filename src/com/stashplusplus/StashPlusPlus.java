@@ -1,6 +1,7 @@
 package com.stashplusplus;
 
 import java.awt.Button;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
@@ -14,7 +15,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
@@ -25,19 +25,16 @@ import com.stashplusplus.exceptions.FailedToLogin;
 import com.stashplusplus.exceptions.FailedToOpenPopUp;
 import com.stashplusplus.exceptions.FailedToOpenStashesTab;
 
-public class StashPlusPlus
-{
-	public static void main(String[] args)
-	{
+public class StashPlusPlus {
+	public static void main(String[] args) {
 		StashPlusPlus test = new StashPlusPlus();
 	}
 
 	private Frame gui_;
 	private FirefoxDriver browser_;
 	private WebDriverWait browserWaiter_;
-	
-	public StashPlusPlus()
-	{
+
+	public StashPlusPlus() {
 		// make a window
 		initLoginGui();
 
@@ -45,15 +42,12 @@ public class StashPlusPlus
 		gui_.setVisible(true);
 	}
 
-	private void initLoginGui()
-	{
+	private void initLoginGui() {
 		gui_ = new Frame("Stash++");
 
 		// allow the user to close by clicking the x
-		gui_.addWindowListener(new WindowAdapter()
-		{
-			public void windowClosing(WindowEvent windowEvent)
-			{
+		gui_.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent windowEvent) {
 				System.exit(0);
 			}
 		});
@@ -79,33 +73,23 @@ public class StashPlusPlus
 		initLoginPanels(emailPanel, passwordPanel, submitPanel);
 	}
 
-	private void initLoginPanels(Panel emailPanel, Panel passwordPanel, Panel submitPanel)
-	{
+	private void initLoginPanels(Panel emailPanel, Panel passwordPanel, Panel submitPanel) {
 		// make the stuff that we need for the panels
 		Label emailLabel = new Label("Email: ");
 		final TextField emailField = new TextField(24);
 
 		Label passwordLabel = new Label("Password: ");
 		final TextField passwordField = new TextField(24);
+		passwordField.setEchoChar('*');
 
 		final String failedToLoginErrorMessage = "Error: could not log in";
 		final Label failedToLoginLabel = new Label();
+		failedToLoginLabel.setForeground(Color.RED);
 		Button submitButton = new Button("Login");
 
-		// set it all up and add all of it
-		emailPanel.add(emailLabel);
-		emailPanel.add(emailField);
-
-		passwordField.setEchoChar('*');
-		passwordPanel.add(passwordLabel);
-		passwordPanel.add(passwordField);
-
-		submitButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent ae)
-			{
-				try
-				{
+		submitButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				try {
 					// make the gui invisible
 					gui_.setVisible(false);
 
@@ -114,12 +98,10 @@ public class StashPlusPlus
 
 					// open the popup window
 					openAccountPopup();
-					
-					//click the stashes tab to pull up a stash
+
+					// click the stashes tab to pull up a stash
 					openStashesTab();
-				}
-				catch (Exception e)
-				{
+				} catch (Exception e) {
 					// display that an error occurred
 					// TODO maybe do an e.getMessage here
 					failedToLoginLabel.setText(failedToLoginErrorMessage);
@@ -129,21 +111,28 @@ public class StashPlusPlus
 				}
 			}
 		});
+
+		// add all of it
+		emailPanel.add(emailLabel);
+		emailPanel.add(emailField);
+
+		passwordPanel.add(passwordLabel);
+		passwordPanel.add(passwordField);
 		
+		submitPanel.add(failedToLoginLabel);
 		submitPanel.add(submitButton);
 	}
 
-	private void loginToPoeWebsite(String email, String password) throws FailedToLogin
-	{
+	private void loginToPoeWebsite(String email, String password) throws FailedToLogin {
 		// this is the url we will be navigating to
 		final String loginUrl = "http://www.pathofexile.com/login/";
 
-		//make a headless browser and go to login url
+		// make a headless browser and go to login url
 		FirefoxOptions options = new FirefoxOptions();
 		// options.setHeadless(true);
 		browser_ = new FirefoxDriver(options);
 		browser_.get(loginUrl);
-		
+
 		// set up wait
 		browserWaiter_ = new WebDriverWait(browser_, 10);
 
@@ -158,8 +147,7 @@ public class StashPlusPlus
 
 		// if we couldnt grab those 3 throw an exception because we will be unable to
 		// login
-		if (login_email == null || login_password == null || login == null)
-		{
+		if (login_email == null || login_password == null || login == null) {
 			throw new FailedToLogin("Could not find form fields");
 		}
 
@@ -173,21 +161,18 @@ public class StashPlusPlus
 
 		// check and make sure that we logged in if not throw an exception
 		// because logging in failed
-		if (!expectedUrlAfterLogin.equals(browser_.getCurrentUrl()))
-		{
+		if (!expectedUrlAfterLogin.equals(browser_.getCurrentUrl())) {
 			throw new FailedToLogin("URL did not update as expected");
 		}
 	}
 
-	private void openAccountPopup() throws FailedToOpenPopUp
-	{
+	private void openAccountPopup() throws FailedToOpenPopUp {
 		// find the chacacter name in the top left
 		WebElement characterName = browserWaiter_
 				.until(ExpectedConditions.presenceOfElementLocated(By.className("infoLine1")));
 
 		// if we cant grab that throw an exception because this failed
-		if (characterName == null)
-		{
+		if (characterName == null) {
 			throw new FailedToOpenPopUp();
 		}
 
@@ -201,14 +186,12 @@ public class StashPlusPlus
 		String styleOfOverlay = overlay.getAttribute("style");
 
 		// if the opacity is not 0.9; then we failed to pull it up
-		if (!styleOfOverlay.contains("opacity: 0.9;"))
-		{
+		if (!styleOfOverlay.contains("opacity: 0.9;")) {
 			throw new FailedToOpenPopUp();
 		}
 	}
-	
-	private void openStashesTab() throws FailedToOpenStashesTab
-	{
-		
+
+	private void openStashesTab() throws FailedToOpenStashesTab {
+
 	}
 }

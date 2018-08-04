@@ -6,7 +6,7 @@ public class Item
 {
 	String name_;
 	ArrayList<String> baseStats_;
-	ArrayList<String> attributes_;
+	ArrayList<String> itemAttributes_;
 
 	public Item(String name)
 	{
@@ -20,7 +20,7 @@ public class Item
 
 	public ArrayList<String> getAttributs()
 	{
-		return attributes_;
+		return itemAttributes_;
 	}
 
 	public void addBaseStat(String baseStat)
@@ -30,6 +30,21 @@ public class Item
 
 	public void addAttribute(String attribute)
 	{
-		attributes_.add(attribute);
+		itemAttributes_.add(attribute);
+	}
+	
+	public boolean checkForAttributes(ArrayList<String> attributesIWant)
+	{
+		boolean checkPassed = true;
+		
+		for(String attribute : attributesIWant)
+		{
+			if(!itemAttributes_.contains(attribute)) 
+			{
+				checkPassed = false;
+			}
+		}
+		
+		return checkPassed;
 	}
 }
