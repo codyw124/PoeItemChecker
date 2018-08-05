@@ -102,8 +102,9 @@ public class StashPlusPlus {
 					// click the stashes tab to pull up a stash
 					openStashesTab();
 				} catch (Exception e) {
+					browser_.close();
+					
 					// display that an error occurred
-					// TODO maybe do an e.getMessage here
 					failedToLoginLabel.setText(failedToLoginErrorMessage);
 
 					// make the gui visible again
@@ -129,7 +130,7 @@ public class StashPlusPlus {
 
 		// make a headless browser and go to login url
 		FirefoxOptions options = new FirefoxOptions();
-		// options.setHeadless(true);
+		options.setHeadless(true);
 		browser_ = new FirefoxDriver(options);
 		browser_.get(loginUrl);
 
