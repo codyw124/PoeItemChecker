@@ -1,6 +1,6 @@
 package com.newideas;
 
-import java.util.Set;
+import java.util.ArrayList;
 
 import com.newideas.BrowserSimulator.FailedToGoToUrl;
 import com.newideas.PoeBrowserSimulator.FailedToOpenOverlay;
@@ -16,11 +16,17 @@ public class TestingGrounds
 			test = new PoeBrowserSimulator();
 
 			test.login("cody_w125@ymail.com", "UbisoftBound18");
-
-			test.openAccountPopup();
 			
+			ArrayList<String> charList = test.getCharacterList();
+			
+			for(String character : charList)
+			{
+				System.out.println(character);
+			}
+			
+			test.selectCharacter("HowLongDoesOnePOELast");
 		}
-		catch (FailedToGoToUrl | FailedToOpenOverlay e)
+		catch (FailedToGoToUrl e)
 		{
 			System.err.println(e.getMessage());
 		}

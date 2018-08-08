@@ -18,7 +18,7 @@ public class BrowserSimulator
 	public BrowserSimulator()
 	{
 		FirefoxOptions options = new FirefoxOptions();
-		//options.setHeadless(true);
+		options.setHeadless(true);
 		browser_ = new FirefoxDriver(options);
 		browserWaiter_ = new WebDriverWait(browser_, 10);
 	}
