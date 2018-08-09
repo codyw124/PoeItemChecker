@@ -18,7 +18,7 @@ public class BrowserSimulator
 	public BrowserSimulator()
 	{
 		FirefoxOptions options = new FirefoxOptions();
-		options.setHeadless(true);
+		//options.setHeadless(true);
 		browser_ = new FirefoxDriver(options);
 		browserWaiter_ = new WebDriverWait(browser_, 10);
 	}
@@ -52,14 +52,6 @@ public class BrowserSimulator
 		WebElement element = browserWaiter_.until(ExpectedConditions.presenceOfElementLocated(By.id(id)));
 
 		return element;
-	}
-
-	public List<WebElement> getElementsByClass(String className)
-	{
-		List<WebElement> elements = browserWaiter_
-				.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.className(className)));
-
-		return elements;
 	}
 	
 	public void closeBrowser()

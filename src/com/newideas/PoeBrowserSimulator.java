@@ -1,11 +1,12 @@
 package com.newideas;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
+import org.jsoup.nodes.Element;
 import org.openqa.selenium.WebElement;
 
 import com.stashplusplus.Item;
@@ -56,19 +57,21 @@ public class PoeBrowserSimulator extends BrowserSimulator
 		goToUrl(PATHOFEXILE + "/account/view-profile/" + username + "/characters/");
 	}
 
-	public ArrayList<String> getCharacterList() throws FailedToGoToUrl
+	public Set<String> getCharacterList() throws FailedToGoToUrl
 	{
 		goToCharacterScreen();
 
-		List<WebElement> elementList = getElementsByClass("character");
+		WebElement characters = getElementByClass("characters");
 
-		ArrayList<String> names = new ArrayList<String>();
-		
-		for (WebElement element : elementList)
+		Document doc = Jsoup.parse(characters.getAttribute("innerHTML"));
+
+		Set<String> names = new TreeSet<String>();
+
+		for (Element element : doc.getAllElements())
 		{
-			String elementText = element.getText();
-			
-			//if text isnt concerning level or league it must be char name
+			String elementText = element.text();
+
+			// if text isnt concerning level or league it must be char name
 			if (!elementText.contains("Level") && !elementText.contains("League"))
 			{
 				names.add(elementText);
@@ -85,14 +88,17 @@ public class PoeBrowserSimulator extends BrowserSimulator
 	{
 		goToCharacterScreen();
 
-		List<WebElement> elementList = getElementsByClass("character");
+		WebElement characters = getElementByClass("characters");
 
-		for (WebElement element : elementList)
+		Document doc = Jsoup.parse(characters.getAttribute("innerHTML"));
+
+		for (Element element : doc.getAllElements())
 		{
-			if (element.getText().equals(characterName))
+			if(element.text().contains(characterName))
 			{
-				element.click();
+				
 			}
+			System.out.println(element.text());
 		}
 
 		// return to the home page for consistency
