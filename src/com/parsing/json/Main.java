@@ -11,25 +11,22 @@ public class Main
 {
 	public static void main(String[] args) throws IOException
 	{
-		System.out.println("hello");
-
+		// make a factory
 		JsonFactory jasonFactory = new JsonFactory();
+
+		// create a parser with the file
 		JsonParser jsonParser = jasonFactory.createParser(new File("pokedex.json"));
+
+		// parse the object we started
 		parseObject(jsonParser);
-		
 	}
 
 	public static void parseObject(JsonParser jsonParser) throws IOException
 	{
-		JsonToken currentToken = ;
-		while (currentToken != JsonToken.END_OBJECT)
+		// loop thru the tokens until we get to the end of the object we are on
+		while (jsonParser.nextToken() != null)
 		{
-			currentToken = jsonParser.nextToken();
-			if()
-			
-			// get the current token
-			String fieldname = jsonParser.getCurrentName();
-			if ("name".equals(fieldname))
+			if("id".equals(jsonParser.currentName()))
 			{
 				// move to next token
 				jsonParser.nextToken();
@@ -37,5 +34,5 @@ public class Main
 			}
 		}
 	}
-	
+
 }
