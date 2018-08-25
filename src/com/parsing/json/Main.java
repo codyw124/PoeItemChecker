@@ -18,26 +18,18 @@ public class Main
 	public static void main(String[] args) throws IOException
 	{
 		// get the initial json
-		getJson("");
+		String nextPageCode = "236144182-245503211-231016887-265144919-250091157";
+		
+		while(true)
+		{
+			nextPageCode = parseApiPage(nextPageCode);
+		}
 	}
 
-	public static void getJson(String nextPageId) throws JsonParseException, IOException
+	public static String parseApiPage(String nextPageId) throws IOException
 	{
-		String poeApiUrl = "http://www.pathofexile.com/api/public-stash-tabs?id=" + nextPageId;
-
-		URL url = new URL(poeApiUrl);
-
-		// make a factory
-		JsonFactory jsonFactory = new JsonFactory();
-
-		// create a parser with the file
-		JsonParser jsonParser = jsonFactory.createParser(url);
-
-		parseJson(jsonParser);
-	}
-
-	public static void parseJson(JsonParser jsonParser) throws IOException
-	{
+		JsonParser jsonParser = initParser(nextPageId);
+		
 		String nextPage = null;
 
 		String currentAccountName = "";
@@ -66,13 +58,23 @@ public class Main
 			}
 
 			// if its an items section and we are on the right account name
-			if ("items".equals(jsonParser.currentName()) && currentAccountName.equals("5a4oK"))
+			if ("items".equals(jsonParser.currentName()) && currentAccountName.equals("paridox125"))
 			{
 				System.out.println("found him");
 			}
 		}
 
 		// wait before going to next page
+		sleep();
+		
+		//System.out.println("about to parse " + nextPage);
+
+		//	return the next page we will parse
+		return nextPage;
+	}
+
+	private static void sleep()
+	{
 		try
 		{
 			Thread.sleep(750);
@@ -80,8 +82,20 @@ public class Main
 		{
 			System.err.println(e.getMessage());
 		}
+	}
 
-		// get the next json
-		getJson(nextPage);
+	private static JsonParser initParser(String nextPageId)
+			throws MalformedURLException, IOException, JsonParseException
+	{
+		String poeApiUrl = "http://www.pathofexile.com/api/public-stash-tabs?id=" + nextPageId;
+		
+		URL url = new URL(poeApiUrl);
+
+		// make a factory
+		JsonFactory jsonFactory = new JsonFactory();
+
+		// create a parser with the file
+		JsonParser jsonParser = jsonFactory.createParser(url);
+		return jsonParser;
 	}
 }
