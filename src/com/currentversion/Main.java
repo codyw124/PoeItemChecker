@@ -1,10 +1,6 @@
-package com.parsing.json;
+package com.currentversion;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -18,7 +14,7 @@ public class Main
 	public static void main(String[] args) throws IOException
 	{
 		// get the initial json
-		String nextPageCode = "236144182-245503211-231016887-265144919-250091157";
+		String nextPageCode = "236144584-245503859-231017559-265145611-250091940";
 		
 		while(true)
 		{
@@ -50,9 +46,7 @@ public class Main
 			// if it is an account name store it
 			if ("accountName".equals(jsonParser.currentName()))
 			{
-				// move to next token
-				jsonParser.nextToken();
-
+				
 				// get the text and store it as the current account name
 				currentAccountName = jsonParser.getText();
 			}
@@ -60,14 +54,21 @@ public class Main
 			// if its an items section and we are on the right account name
 			if ("items".equals(jsonParser.currentName()) && currentAccountName.equals("paridox125"))
 			{
+				// move to next token which will be the array open
+				jsonParser.nextToken();
+//
+//				while(jsonParser.nextToken() != JsonToken.END_ARRAY)
+//				{
+//					
+//				}
+				
 				System.out.println("found him");
+				System.out.println(nextPageId);
 			}
 		}
 
 		// wait before going to next page
 		sleep();
-		
-		//System.out.println("about to parse " + nextPage);
 
 		//	return the next page we will parse
 		return nextPage;
