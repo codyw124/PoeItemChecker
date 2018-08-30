@@ -54,16 +54,7 @@ public class Main
 			// if its an items section and we are on the right account name
 			if ("items".equals(jsonParser.currentName()) && currentAccountName.equals("paridox125"))
 			{
-				// move to next token which will be the array open
-				jsonParser.nextToken();
-//
-//				while(jsonParser.nextToken() != JsonToken.END_ARRAY)
-//				{
-//					
-//				}
-				
-				System.out.println("found him");
-				System.out.println(nextPageId);
+				parseArrayOfItems(jsonParser);
 			}
 		}
 
@@ -72,6 +63,11 @@ public class Main
 
 		//	return the next page we will parse
 		return nextPage;
+	}
+
+	private static void parseArrayOfItems(JsonParser jsonParser)
+	{
+		
 	}
 
 	private static void sleep()
