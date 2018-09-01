@@ -1,10 +1,10 @@
 package com.currentversionv2;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.net.URLConnection;
-import java.util.Date;
+import java.util.Scanner;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -13,10 +13,27 @@ public class StashPlusPlus
 {
 	public static void main(String[] args)
 	{
-		parsePageAtUrl("242172043-251088127-237186732-272004441-255950913");
+		//make a scanner
+		Scanner scanner = new Scanner(System.in);
+
+	    //  prompt for the account name
+	    System.out.print("Enter your account name: ");
+
+	    // get their input as a String
+	    String username = scanner.next();
+	    
+	    //close the scanner
+	    scanner.close();
+		
+		String currentChangeId = "243236368-252457933-238554329-273108438-257186088";
+		
+		while(true)
+		{
+			currentChangeId = parsePageAtUrl(currentChangeId, username);
+		}
 	}
 
-	private static void parsePageAtUrl(String currentChangeId)
+	private static String parsePageAtUrl(String currentChangeId, String usernameToScanFor)
 	{
 		// the url we will use to start with
 		String poeApiUrl = "http://www.pathofexile.com/api/public-stash-tabs?id=" + currentChangeId;
@@ -48,7 +65,7 @@ public class StashPlusPlus
 			if (owner != null)
 			{
 				// if they are who we are looking for
-				if (owner.toString().equals("Frank1601"))
+				if (owner.toString().equalsIgnoreCase(usernameToScanFor))
 				{
 					// get the array of items in this stash
 					JSONArray itemsInCurrentStash = currentStash.getJSONArray("items");
@@ -63,13 +80,18 @@ public class StashPlusPlus
 						Object currentItemNameObject = currentItem.get("name");
 
 						// if it has a name
-						if (currentItemNameObject != "")
+						if (currentItemNameObject != null)
 						{
 							// convert to a string
 							String currentItemName = currentItemNameObject.toString();
 
-							// print it
-							System.out.println(currentItemName);
+							if(!currentItemName.equals(""))
+							{
+								String[] test = currentItemName.split(">");
+								
+								// print it
+								System.out.println(test[test.length - 1]);
+							}
 						}
 					}
 				}
@@ -87,7 +109,7 @@ public class StashPlusPlus
 			sleep(timeToWait);
 		}
 
-		parsePageAtUrl(nextChangeId);
+		return nextChangeId;
 	}
 
 	private static void sleep(long timeToWait)
@@ -101,47 +123,27 @@ public class StashPlusPlus
 		}
 	}
 	
-	// compliments of
-	// https://alvinalexander.com/blog/post/java/java-how-read-from-url-string-text
 	private static String getUrlContents(String theUrl)
 	{
 		//make a builder
 		StringBuilder builder = new StringBuilder();
-
-		try
+		
+		try(BufferedReader bufferedReader = 
+				new BufferedReader(
+				new InputStreamReader(
+				new URL(theUrl).openConnection().getInputStream())))
 		{
-			//make a url out of the string url
-			URL url = new URL(theUrl);
-
-			//open a conenction to it
-			URLConnection urlConnection = url.openConnection();
-
-			//make a buffered reader out of its stream
-			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-
 			//read the first line
-			String line = bufferedReader.readLine();
-
-			do
+			String line = "";
+			
+			//while there are still lines
+			while((line = bufferedReader.readLine()) != null)
 			{
-				if(builder.toString().length() != 0)
-				{
-					//start a new line
-					builder.append("\n");
-				}
-				
-				//go to the next line
-				line = bufferedReader.readLine();
-				
-				//append it
+				//append current line
 				builder.append(line);
-				
-			} while (line != null);
-			
-			//close the reader
-			bufferedReader.close();
-			
-		} catch (Exception e)
+			}
+		}
+		catch (IOException e)
 		{
 			e.printStackTrace();
 		}
