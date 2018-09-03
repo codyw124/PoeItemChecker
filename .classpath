@@ -7,8 +7,6 @@
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="C:/Users/CodysTower3/Documents/GitHub/PoeItemChecker/jars/jackson-core-2.9.6.jar"/>
-	<classpathentry kind="lib" path="C:/Users/CodysTower3/Documents/GitHub/PoeItemChecker/jars/htmlunit-2.32.jar"/>
 	<classpathentry kind="lib" path="C:/Users/CodysTower3/Documents/GitHub/PoeItemChecker/jars/json-20180813.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

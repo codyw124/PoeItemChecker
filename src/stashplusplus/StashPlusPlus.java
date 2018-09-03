@@ -1,12 +1,14 @@
-package com.currentversionv2;
+package stashplusplus;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Scanner;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class StashPlusPlus
@@ -25,12 +27,39 @@ public class StashPlusPlus
 	    //close the scanner
 	    scanner.close();
 		
-		String currentChangeId = "243236368-252457933-238554329-273108438-257186088";
+		String currentChangeId = getCurrentChangeId();
 		
 		while(true)
 		{
 			currentChangeId = parsePageAtUrl(currentChangeId, username);
 		}
+	}
+
+	private static String getCurrentChangeId()
+	{
+		String poeNinjaApi = "http://poe.ninja/api/Data/GetStats/";
+		
+		String poeNinjaJson = getUrlContents(poeNinjaApi);
+		
+		JSONObject poeNinjaStats = null;
+		
+		try
+		{
+			poeNinjaStats = new JSONObject(poeNinjaJson);
+		}
+		catch(JSONException e)
+		{
+			System.err.println(e.getMessage());
+		}
+		
+		String returnValue = "";
+		
+		if(poeNinjaStats != null)
+		{
+			returnValue = poeNinjaStats.getString("next_change_id");
+		}
+		
+		return returnValue;
 	}
 
 	private static String parsePageAtUrl(String currentChangeId, String usernameToScanFor)
@@ -98,28 +127,26 @@ public class StashPlusPlus
 			}
 		}
 		
-		long after = System.currentTimeMillis();
-		
-		final long TOTAL_TIME_TO_WAIT = 750;
-		
-		long timeToWait = TOTAL_TIME_TO_WAIT - (after - before);
-		
-		if(timeToWait > 0)
-		{
-			sleep(timeToWait);
-		}
+		sleepIfNeeded(before, System.currentTimeMillis());
 
 		return nextChangeId;
 	}
 
-	private static void sleep(long timeToWait)
+	private static void sleepIfNeeded(long before, long after)
 	{
-		try
+		final long TOTAL_TIME_TO_WAIT = 750;
+				
+		long timeToWait = TOTAL_TIME_TO_WAIT - (after - before);
+		
+		if(timeToWait > 0)
 		{
-			Thread.sleep(timeToWait);
-		} catch (InterruptedException e)
-		{
-			System.err.println(e.getMessage());
+			try
+			{
+				Thread.sleep(timeToWait);
+			} catch (InterruptedException e)
+			{
+				System.err.println(e.getMessage());
+			}
 		}
 	}
 	
@@ -128,24 +155,28 @@ public class StashPlusPlus
 		//make a builder
 		StringBuilder builder = new StringBuilder();
 		
-		try(BufferedReader bufferedReader = 
-				new BufferedReader(
-				new InputStreamReader(
-				new URL(theUrl).openConnection().getInputStream())))
+		try
 		{
+			URL test = new URL(theUrl);
+			
+			InputStream testInputStream = test.openStream();
+			
+			InputStreamReader testInputStreamReader = new InputStreamReader(testInputStream);
+			
+			BufferedReader testBufferedReader = new BufferedReader(testInputStreamReader);
+			
 			//read the first line
-			String line = "";
+			String currentLine = "";
 			
 			//while there are still lines
-			while((line = bufferedReader.readLine()) != null)
+			while((currentLine = testBufferedReader.readLine()) != null)
 			{
 				//append current line
-				builder.append(line);
+				builder.append(currentLine);
 			}
-		}
-		catch (IOException e)
+		} catch (IOException e)
 		{
-			e.printStackTrace();
+			System.err.println(e.getMessage());
 		}
 		
 		return builder.toString();
