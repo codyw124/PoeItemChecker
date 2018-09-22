@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -59,55 +60,52 @@ namespace Stash__
             //get the next change id property from that
             String nextChangeId = currentPageObject.next_change_id;
 
-            // get its stashes
-            dynamic stashes = currentPageObject.stashes;
+            dynamic[] stashes = jArrayToArray(currentPageObject.stashes);
 
             // for each stash
-            for (int i = 0; i < stashes; i++)
+            foreach (dynamic currentStash in stashes)
             {
                 // print the owners name
-                String currentAccountName = stashes[i].accountName;
-/*
-                // if the owner isnt null
-                if (currentAccountName != null && currentAccountName)
+                String currentAccountName = currentStash.accountName;
+
+                // if the owner isnt null and they are who we are looking for
+                if (currentAccountName != null && currentAccountName == accountName)
                 {
-                    // if they are who we are looking for
-                    if (owner.toString().equalsIgnoreCase(usernameToScanFor))
+                    // get the array of items in this stash
+                    dynamic[] itemsInCurrentStash = jArrayToArray(currentStash.items);
+
+                    // for every item
+                    foreach (dynamic item in itemsInCurrentStash)
                     {
-                        // get the array of items in this stash
-                        JSONArray itemsInCurrentStash = currentStash.getJSONArray("items");
+                        // get the current item name
+                        String currentItemName = item.name;
 
-                        // for every item
-                        for (int j = 0; j < itemsInCurrentStash.length(); j++)
+                        // if it has a name
+                        if (currentItemName != null)
                         {
-                            // get the current item
-                            JSONObject currentItem = itemsInCurrentStash.getJSONObject(j);
-
-                            // get the name of that object as an object
-                            Object currentItemNameObject = currentItem.get("name");
-
-                            // if it has a name
-                            if (currentItemNameObject != null)
+                            if (currentItemName != "")
                             {
-                                // convert to a string
-                                String currentItemName = currentItemNameObject.toString();
+                                String[] test = currentItemName.Split('>');
 
-                                if (!currentItemName.equals(""))
-                                {
-                                    String[] test = currentItemName.split(">");
-
-                                    // print it
-                                    System.out.println(test[test.length - 1]);
-                                }
+                                // print it
+                                Console.WriteLine(test[test.Length - 1]);
                             }
                         }
                     }
-                }*/
+                }
             }
 
             //stop the stopwatch
             stopWatch.Stop();
 
+            //sleep if needed
+            sleepIfNeeded(stopWatch);
+
+            return nextChangeId;
+        }
+
+        private static void sleepIfNeeded(Stopwatch stopWatch)
+        {
             //get how long has passed
             TimeSpan ts = stopWatch.Elapsed;
 
@@ -123,8 +121,21 @@ namespace Stash__
                 //wait how ever long we need to
                 Thread.Sleep(TOTAL_TIME_TO_WAIT - millisSinceStart);
             }
+        }
 
-            return nextChangeId;
+        private dynamic[] jArrayToArray(JArray theJArray)
+        {
+            //make an array for the stashes
+            dynamic[] stashes = new dynamic[theJArray.Count];
+
+            //add the jarray stuff to the regular array
+            int i = 0;
+            foreach (dynamic item in theJArray)
+            {
+                stashes[i++] = item;
+            }
+
+            return stashes;
         }
 
         private void button(object sender, RoutedEventArgs e)

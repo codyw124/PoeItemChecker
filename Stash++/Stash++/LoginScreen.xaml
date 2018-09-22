@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Stash__"
         mc:Ignorable="d"
-        Title="Select Account" Height="600" Width="800" FontSize="24" Background="DimGray">
+        Title="Select Account" Height="600" Width="800" FontSize="24" Background="DimGray" WindowStartupLocation="CenterScreen">
     <Border Background="LightSlateGray" CornerRadius="20" Margin="250,150">
         <StackPanel Margin="20">
             <Label Content="Select Account" HorizontalAlignment="Center"></Label>
